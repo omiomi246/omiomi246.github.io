@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahayta - Domestic Help</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom CSS to handle the mobile-like container and background */
+        .header-logo-img {
+            height: 48px;
+            width: 48px;
+            object-fit: contain;
+        }
+
+        /* Styling for the background watermark */
+        .watermark {
+            font-size: 140px;
+            font-weight: 900;
+            color: #f7d2b7; /* A light, muted orange */
+            opacity: 0.04; /* FIX 1: Reduced opacity for less distraction */
+            pointer-events: none;
+            z-index: 0; 
+        }
+
+        /* Custom styles for the slider button */
+        .slider-handle {
+            width: 60px; 
+            height: 60px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            border: 2px solid #fb923c; /* Orange-400 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-track {
+            height: 60px;
+            background-color: #fdb987; /* Orange-300 */
+            border-radius: 30px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .slider-message {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            pointer-events: none; /* Ignore pointer events */
+        }
+
+        .slider-handle-icon {
+            color: #fb923c; /* Orange-400 */
+        }
+    </style>
+</head>
+<body class="bg-orange-50 font-sans text-gray-800 h-screen flex flex-col overflow-hidden">
+    <header class="flex justify-between items-center p-4 shadow-sm z-40 bg-white">
+        <img src="1000168926.jpg" alt="Sahayta Logo" class="header-logo-img rounded-lg"> 
+
+        <button id="infoButton" class="text-orange-500 hover:text-orange-600 focus:outline-none p-2 rounded-full">
+            <i data-lucide="info" class="w-6 h-6"></i>
+        </button>
+    </header>
+
+    <main class="flex-1 relative w-full max-w-md mx-auto bg-white shadow-xl h-full overflow-hidden">
+        
+        <div class="absolute inset-0 flex items-center justify-center -z-10">
+            <div class="watermark text-center transform -rotate-45 leading-none">
+                SAHAYTA<br>HOME CARE SERVICES
+            </div>
+        </div>
+
+        <div class="relative flex-1 overflow-hidden">
+            <div class="absolute inset-0 overflow-y-auto z-30"> <div id="loginView" class="view p-6 space-y-6">
+                    <div class="text-center pt-8 pb-4">
+                        <div class="h-20 w-20 mx-auto rounded-full bg-orange-200 flex items-center justify-center mb-4">
+                            <i data-lucide="user-check" class="w-10 h-10 text-orange-600"></i>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-900">Welcome to Sahayta</h1>
+                        <p class="text-gray-500 mt-1">Verify your details to continue.</p>
+                    </div>
+
+                    <form id="loginForm" class="space-y-4">
+                        <div>
+                            <label for="fullName" class="text-xs font-semibold uppercase text-gray-600">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" placeholder="Enter Full Name" required class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 transition duration-150 ease-in-out">
+                        </div>
+                        <div>
+                            <label for="confirmName" class="text-xs font-semibold uppercase text-gray-600">Confirm Full Name</label>
+                            <input type="text" id="confirmName" name="confirmName" placeholder="Re-enter Full Name" required class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 transition duration-150 ease-in-out">
+                        </div>
+                        <div>
+                            <label for="phone" class="text-xs font-semibold uppercase text-gray-600">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter Phone Number" required class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 transition duration-150 ease-in-out">
+                        </div>
+                        <div>
+                            <label for="confirmPhone" class="text-xs font-semibold uppercase text-gray-600">Confirm Phone Number</label>
+                            <input type="tel" id="confirmPhone" name="confirmPhone" placeholder="Re-enter Phone Number" required class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 transition duration-150 ease-in-out">
+                        </div>
+                        <button type="submit" class="w-full mt-6 flex items-center justify-center p-4 bg-orange-500 text-white font-bold rounded-xl shadow-lg hover:bg-orange-600 transition duration-150 ease-in-out">
+                            Proceed to Request
+                            <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+                        </button>
+                    </form>
+                    <div id="loginMessage" class="text-center mt-4 text-sm font-medium"></div>
+                </div>
+                
+                <div id="dashboardView" class="view hidden p-6 space-y-6">
+                    <div class="text-center pt-8 pb-4">
+                        <h2 class="text-3xl font-bold text-gray-900">Welcome, <span id="dashboardName"></span>!</h2>
+                        <p class="text-gray-500 mt-1">What service do you require today?</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div id="service1" class="service-card p-4 bg-white border border-gray-200 rounded-xl shadow-md cursor-pointer hover:shadow-lg transition duration-200 ease-in-out">
+                            <i data-lucide="home" class="w-8 h-8 text-orange-500 mb-2"></i>
+                            <h3 class="font-semibold text-lg text-gray-800">Home Care</h3>
+                            <p class="text-sm text-gray-500">For elders or specialized care.</p>
+                        </div>
+                        <div id="service2" class="service-card p-4 bg-white border border-gray-200 rounded-xl shadow-md cursor-pointer hover:shadow-lg transition duration-200 ease-in-out">
+                            <i data-lucide="bath" class="w-8 h-8 text-orange-500 mb-2"></i>
+                            <h3 class="font-semibold text-lg text-gray-800">Domestic Help</h3>
+                            <p class="text-sm text-gray-500">Cleaning, cooking, household chores.</p>
+                        </div>
+                        <div id="service3" class="service-card p-4 bg-white border border-gray-200 rounded-xl shadow-md cursor-pointer hover:shadow-lg transition duration-200 ease-in-out">
+                            <i data-lucide="nurse" class="w-8 h-8 text-orange-500 mb-2"></i>
+                            <h3 class="font-semibold text-lg text-gray-800">Nanny/Japa</h3>
+                            <p class="text-sm text-gray-500">Infant care and child supervision.</p>
+                        </div>
+                        <div id="service4" class="service-card p-4 bg-white border border-gray-200 rounded-xl shadow-md cursor-pointer hover:shadow-lg transition duration-200 ease-in-out">
+                            <i data-lucide="soup" class="w-8 h-8 text-orange-500 mb-2"></i>
+                            <h3 class="font-semibold text-lg text-gray-800">Cooking Only</h3>
+                            <p class="text-sm text-gray-500">Skilled cook for daily meals.</p>
+                        </div>
+                    </div>
+                    
+                    <button id="viewRequestsButton" class="w-full mt-6 p-3 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition duration-150 ease-in-out">
+                        View Past Requests
+                    </button>
+                    <button id="logoutButton" class="w-full mt-3 p-3 text-sm text-red-500 hover:text-red-600 transition duration-150 ease-in-out">
+                        Log Out
+                    </button>
+                </div>
+
+                <div id="requestView" class="view hidden p-6 space-y-6">
+                    <button id="backToDashboard" class="text-orange-500 hover:text-orange-600 focus:outline-none mb-4 flex items-center">
+                        <i data-lucide="arrow-left" class="w-4 h-4 mr-1"></i> Back
+                    </button>
+                    <div class="text-center pb-4">
+                        <h2 class="text-2xl font-bold text-gray-900">Request for <span id="serviceTitle"></span></h2>
+                        <p class="text-gray-500 mt-1">Please provide the necessary details.</p>
+                    </div>
+
+                    <form id="requestForm" class="space-y-4">
+                        <input type="hidden" id="requestedService" name="requestedService">
+                        
+                        <div>
+                            <label for="requestAddress" class="text-xs font-semibold uppercase text-gray-600">Service Address</label>
+                            <input type="text" id="requestAddress" name="requestAddress" placeholder="Flat No. / Street / Locality" required class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+                        </div>
+                        
+                        <div>
+                            <label for="city" class="text-xs font-semibold uppercase text-gray-600">City</label>
+                            <input type="text" id="city" name="city" placeholder="e.g., Mumbai, Delhi" required class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+                        </div>
+
+                        <div>
+                            <label for="startDate" class="text-xs font-semibold uppercase text-gray-600">Preferred Start Date</label>
+                            <input type="date" id="startDate" name="startDate" required class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+                        </div>
+
+                        <div>
+                            <label for="details" class="text-xs font-semibold uppercase text-gray-600">Specific Requirements</label>
+                            <textarea id="details" name="details" rows="4" placeholder="e.g., part-time, live-in, specific tasks, timings." required class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 resize-none"></textarea>
+                        </div>
+                        
+                        <div class="pt-4">
+                            <div id="submitSliderTrack" class="slider-track bg-orange-500">
+                                <div id="submitSliderHandle" class="slider-handle">
+                                    <i data-lucide="arrow-right" class="slider-handle-icon w-6 h-6"></i>
+                                </div>
+                                <span class="slider-message">SLIDE TO REQUEST SERVICE</span>
+                            </div>
+                        </div>
+                        <div id="requestMessage" class="text-center mt-4 text-sm font-medium"></div>
+
+                    </form>
+                </div>
+
+                <div id="contactView" class="view hidden p-6 space-y-6">
+                    <button id="backFromInfo" class="text-orange-500 hover:text-orange-600 focus:outline-none mb-4 flex items-center">
+                        <i data-lucide="arrow-left" class="w-4 h-4 mr-1"></i> Back
+                    </button>
+                    <div class="text-center mb-6">
+                        <img src="1000168926.jpg" alt="Sahayta Logo" class="logo-img rounded-lg mx-auto mb-4 w-24 h-24 object-contain">
+                        <h2 class="text-2xl font-bold text-gray-900">About Sahayta Services</h2>
+                        <p class="text-gray-500 mt-1">Comprehensive Home Care Solutions</p>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <i data-lucide="mail" class="w-5 h-5 text-orange-500 mr-3"></i>
+                            <div>
+                                <h4 class="font-semibold">Email</h4>
+                                <a href="mailto:support@sahaytaservices.com" class="text-sm text-gray-600 hover:text-orange-500">support@sahaytaservices.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <i data-lucide="phone" class="w-5 h-5 text-orange-500 mr-3"></i>
+                            <div>
+                                <h4 class="font-semibold">Helpline</h4>
+                                <a href="tel:+919999999999" class="text-sm text-gray-600 hover:text-orange-500">+91 999 999 9999</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-orange-500 mr-3"></i>
+                            <div>
+                                <h4 class="font-semibold">Head Office</h4>
+                                <p class="text-sm text-gray-600">123, Service Lane, New Delhi, India</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="messageView" class="view hidden p-6 space-y-6 text-center flex flex-col justify-center min-h-[50vh]">
+                    <div class="h-20 w-20 mx-auto rounded-full bg-green-200 flex items-center justify-center mb-4">
+                        <i data-lucide="check" class="w-10 h-10 text-green-600"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">Success!</h2>
+                    <p id="finalMessage" class="text-gray-600 mt-2">Your request has been successfully submitted. We will contact you shortly.</p>
+                    <button id="returnToDashboard" class="mt-8 mx-auto flex items-center justify-center p-3 bg-orange-500 text-white font-bold rounded-xl shadow-lg hover:bg-orange-600 transition duration-150 ease-in-out">
+                        Go to Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Configuration
+        // LINE 302: The Google Script URL has been inserted here.
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzeT7uXX2ZLepUI_0QF2dEiJHL_YzYCGWrB4981iYcqNbhf4in9hzr6kHlQscD0egnNQ/exec";
+        let isDragging = false;
+        let startX = 0;
+        let track = document.getElementById('submitSliderTrack');
+        let handle = document.getElementById('submitSliderHandle');
+        let trackRect;
+        let handleWidth;
+        let currentView = 'loginView';
+        let userData = {};
+
+        // Utility Functions
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+            currentView = viewId;
+            // Re-render lucide icons after view switch
+            lucide.createIcons();
+        }
+
+        function updateSliderMessage(message) {
+            document.querySelector('.slider-message').textContent = message;
+        }
+
+        function setupSlider() {
+            if (!track) return;
+
+            trackRect = track.getBoundingClientRect();
+            handleWidth = handle.offsetWidth;
+
+            track.addEventListener('mousedown', startDrag);
+            track.addEventListener('touchstart', startDrag);
+
+            document.addEventListener('mousemove', moveDrag);
+            document.addEventListener('touchmove', moveDrag);
+
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+
+            // Initialize handle position
+            handle.style.left = '0px';
+        }
+
+        function startDrag(e) {
+            e.preventDefault();
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            trackRect = track.getBoundingClientRect(); // Recalculate track position
+            handle.classList.add('transition-none'); // Disable transition while dragging
+        }
+
+        function moveDrag(e) {
+            if (!isDragging) return;
+
+            const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            const trackRect = track.getBoundingClientRect();
+            const handleWidth = handle.offsetWidth;
+
+            let letPos = clientX - trackRect.left - (handleWidth / 2);
+
+            const maxDist = trackRect.width - handleWidth - 10;
+            const minDist = 5;
+
+            if (letPos < minDist) letPos = minDist;
+            if (letPos > maxDist) letPos = maxDist;
+
+            handle.style.left = `${letPos}px`;
+            handle.style.opacity = letPos / maxDist; 
+
+            if (letPos >= maxDist - 5) {
+                isDragging = false;
+                submitRequest();
+                handle.style.left = `${maxDist}px`;
+            }
+        }
+
+        function endDrag() {
+            if (isDragging) {
+                isDragging = false;
+                handle.classList.remove('transition-none');
+                handle.style.left = '0px'; // Snap back
+                handle.style.opacity = 1;
+                updateSliderMessage('SLIDE TO REQUEST SERVICE'); // Reset message
+            }
+        }
+
+        // Form Submission Handlers
+        async function submitRequest() {
+            updateSliderMessage('SUBMITTING...');
+            const formData = new FormData(document.getElementById('requestForm'));
+            const data = Object.fromEntries(formData.entries());
+
+            // Add cached user data (Full Name and Phone)
+            data.fullName = userData.fullName;
+            data.phone = userData.phone;
+
+            const requestBody = {
+                type: "requestService",
+                data: data
+            };
+
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('finalMessage').textContent = `Your request for ${data.requestedService} has been successfully submitted. We will contact you shortly on ${userData.phone}.`;
+                    switchView('messageView');
+                } else {
+                    document.getElementById('requestMessage').textContent = `Submission failed: ${result.message || 'Unknown error.'}`;
+                    updateSliderMessage('SLIDE TO REQUEST SERVICE'); // Reset slider
+                    handle.style.left = '0px';
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                document.getElementById('requestMessage').textContent = 'An error occurred. Please try again later.';
+                updateSliderMessage('SLIDE TO REQUEST SERVICE'); // Reset slider
+                handle.style.left = '0px';
+            }
+        }
+
+        // Event Listeners Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            setupSlider();
+            switchView('loginView'); // Start on the login view
+
+            // Login Form Submission
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const fullName = document.getElementById('fullName').value;
+                const confirmName = document.getElementById('confirmName').value;
+                const phone = document.getElementById('phone').value;
+                const confirmPhone = document.getElementById('confirmPhone').value;
+                const messageDiv = document.getElementById('loginMessage');
+                
+                messageDiv.textContent = ''; // Clear previous messages
+
+                if (fullName !== confirmName) {
+                    messageDiv.textContent = 'Full Names do not match.';
+                    return;
+                }
+                if (phone !== confirmPhone) {
+                    messageDiv.textContent = 'Phone Numbers do not match.';
+                    return;
+                }
+                if (!fullName || !phone) {
+                     messageDiv.textContent = 'Please fill in all fields.';
+                     return;
+                }
+                
+                // Success: Cache data and switch to dashboard
+                userData.fullName = fullName;
+                userData.phone = phone;
+                document.getElementById('dashboardName').textContent = fullName.split(' ')[0]; // Use first name
+                switchView('dashboardView');
+            });
+            
+            // Dashboard Listeners (Service Selection)
+            document.querySelectorAll('.service-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const serviceName = this.querySelector('h3').textContent;
+                    document.getElementById('serviceTitle').textContent = serviceName;
+                    document.getElementById('requestedService').value = serviceName;
+                    switchView('requestView');
+                    
+                    // Reset slider on new request view
+                    handle.style.left = '0px';
+                    handle.style.opacity = 1;
+                    updateSliderMessage('SLIDE TO REQUEST SERVICE');
+                    document.getElementById('requestMessage').textContent = '';
+                });
+            });
+
+            // Navigation Listeners
+            document.getElementById('infoButton').addEventListener('click', () => switchView('contactView'));
+            document.getElementById('backFromInfo').addEventListener('click', () => {
+                // Determine previous view
+                switchView(userData.fullName ? 'dashboardView' : 'loginView');
+            });
+            document.getElementById('backToDashboard').addEventListener('click', () => switchView('dashboardView'));
+            document.getElementById('returnToDashboard').addEventListener('click', () => switchView('dashboardView'));
+            document.getElementById('logoutButton').addEventListener('click', () => {
+                userData = {}; // Clear user data
+                document.getElementById('loginForm').reset();
+                switchView('loginView');
+            });
+
+            // Initial view setup
+            // This is done again in switchView('loginView'); above, but kept here for clarity.
+        });
+    </script>
+</body>
+</html>
